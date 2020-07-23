@@ -503,7 +503,7 @@ func (p *parser) parseImportStatements() error {
 
 		astPkgs, err := p.getPkgAst(pkgPath)
 		if err != nil {
-			return fmt.Errorf("parseImportStatements: parse of %s package cause error: %s", pkgPath, err)
+			continue
 		}
 
 		p.PkgNameImportedPkgAlias[pkgName] = map[string][]string{}
@@ -554,7 +554,7 @@ func (p *parser) parseTypeSpecs() error {
 		}
 		astPkgs, err := p.getPkgAst(pkgPath)
 		if err != nil {
-			return fmt.Errorf("parseTypeSpecs: parse of %s package cause error: %s", pkgPath, err)
+			continue
 		}
 		for _, astPackage := range astPkgs {
 			for _, astFile := range astPackage.Files {
@@ -611,7 +611,7 @@ func (p *parser) parsePaths() error {
 
 		astPkgs, err := p.getPkgAst(pkgPath)
 		if err != nil {
-			return fmt.Errorf("parsePaths: parse of %s package cause error: %s", pkgPath, err)
+			continue
 		}
 		for _, astPackage := range astPkgs {
 			for _, astFile := range astPackage.Files {
@@ -812,9 +812,9 @@ func (p *parser) parseResponseComment(pkgPath, pkgName string, operation *Operat
 		return fmt.Errorf("parseResponseComment: http status must be int, but got %s", status)
 	}
 	switch matches[2] {
-	case "object", "array", "{object}", "{array}":
+	case "object", "array", "{object}", "{array}", "integer", "string":
 	default:
-		return fmt.Errorf("parseResponseComment: invalid jsonType %s", matches[2])
+		return fmt.Errorf("parseResponseComment: invalid jsonType %s in %s", matches[2], comment)
 	}
 	responseObject := &ResponseObject{
 		Content: map[string]*MediaTypeObject{},
